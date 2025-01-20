@@ -18,6 +18,7 @@ public class PlayManager {
 	public static int right_x;
 	public static int top_y;
 	public static int bottom_y;
+	public static int dropInterval = 60;
 	
 	Mino currentMino;
 	final int MINO_START_X;
@@ -57,6 +58,6 @@ public class PlayManager {
 		graphics.drawRect(x, y, 200, 200);
 		graphics.setFont(new Font("Arial", Font.PLAIN, 30));
 		graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		graphics.drawString("Next piece", x + 30, y + 60);
+		graphics.drawString("NEXT", x + 60, y + 60);
 	}
 }
