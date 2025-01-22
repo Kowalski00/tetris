@@ -5,9 +5,16 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.Random;
 
 import tetromino.Mino;
+import tetromino.Mino_I;
+import tetromino.Mino_J;
 import tetromino.Mino_L;
+import tetromino.Mino_O;
+import tetromino.Mino_S;
+import tetromino.Mino_T;
+import tetromino.Mino_Z;
 import tetromino.Square;
 
 public class PlayManager {
@@ -33,7 +40,7 @@ public class PlayManager {
 		MINO_START_X = left_x + (WIDTH / 2) - Square.SIZE;
 		MINO_START_Y = top_y + Square.SIZE;
 		
-		currentMino = new Mino_L();
+		currentMino = pickRandomMino();
 		currentMino.setXY(MINO_START_X, MINO_START_Y);
 	}
 	
@@ -59,5 +66,24 @@ public class PlayManager {
 		graphics.setFont(new Font("Arial", Font.PLAIN, 30));
 		graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		graphics.drawString("NEXT", x + 60, y + 60);
+	}
+
+	private Mino pickRandomMino() {
+
+		Mino mino = null;
+
+		int i = new Random().nextInt(7);
+
+		switch(i){
+			case 0: mino = new Mino_I();break;
+			case 1: mino = new Mino_J();break;
+			case 2: mino = new Mino_L();break;
+			case 3: mino = new Mino_O();break;
+			case 4: mino = new Mino_S();break;
+			case 5: mino = new Mino_T();break;
+			case 6: mino = new Mino_Z();break;
+		}
+
+		return mino;
 	}
 }
