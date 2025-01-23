@@ -13,6 +13,10 @@ public class Mino {
 	int autoDropCounter = 0;
 	public int direction = 1;
 	
+	boolean leftCollision;
+	boolean rightCollision;
+	boolean bottomCollision;
+	
 	public void create(Color color) {
 		for(int i = 0; i < 4; i++) {
 			squares[i] = new Square(color);
@@ -24,10 +28,15 @@ public class Mino {
 	}
 	
 	public void updateXY(int direction) {
-		this.direction = direction;
-		for(int i = 0; i < 4; i++) {
-			squares[i].x = tempSquares[i].x;
-			squares[i].y = tempSquares[i].y;
+
+		checkRotationCollision();
+
+		if(!leftCollision && !rightCollision && !bottomCollision) {
+			this.direction = direction;
+			for(int i = 0; i < 4; i++) {
+				squares[i].x = tempSquares[i].x;
+				squares[i].y = tempSquares[i].y;
+			}
 		}
 	}
 
@@ -35,6 +44,41 @@ public class Mino {
 	public void getDirection2() {}	
 	public void getDirection3() {}	
 	public void getDirection4() {}	
+
+	public void checkMovementCollision() {
+		leftCollision = false;
+		rightCollision = false;
+		bottomCollision = false;
+
+		for(int i = 0; i < squares.length; i++) {
+			if(squares[i].x == PlayManager.left_x) leftCollision = true;
+		}
+		
+		for(int i = 0; i < squares.length; i++) {
+			if(squares[i].x + Square.SIZE == PlayManager.right_x) rightCollision = true;
+		}
+		
+		for(int i = 0; i < squares.length; i++) {
+			if(squares[i].y + Square.SIZE == PlayManager.bottom_y) bottomCollision = true;
+		}
+	}
+	public void checkRotationCollision() {
+		leftCollision = false;
+		rightCollision = false;
+		bottomCollision = false;
+
+		for(int i = 0; i < squares.length; i++) {
+			if(tempSquares[i].x < PlayManager.left_x) leftCollision = true;
+		}
+		
+		for(int i = 0; i < squares.length; i++) {
+			if(tempSquares[i].x + Square.SIZE > PlayManager.right_x) rightCollision = true;
+		}
+		
+		for(int i = 0; i < squares.length; i++) {
+			if(tempSquares[i].y + Square.SIZE > PlayManager.bottom_y) bottomCollision = true;
+		}
+	}
 	
 	public void update() {
 		
@@ -83,24 +127,33 @@ public class Mino {
 			KeyHandler.upPressed = false;
 		}
 		
+		checkMovementCollision();
+		
 		if(KeyHandler.downPressed) {
-			for(int i = 0; i < 4; i++) {
-				squares[i].y += Square.SIZE;
+			if(!bottomCollision) {
+				for(int i = 0; i < 4; i++) {
+					squares[i].y += Square.SIZE;
+				}
+				autoDropCounter = 0;
 			}
-			autoDropCounter = 0;
 			KeyHandler.downPressed = false;
 		}
 		
 		if(KeyHandler.leftPressed) {
-			for(int i = 0; i < 4; i++) {
-				squares[i].x -= Square.SIZE;
+
+			if(!leftCollision) {
+				for(int i = 0; i < 4; i++) {
+					squares[i].x -= Square.SIZE;
+				}
 			}
 			KeyHandler.leftPressed = false;
 		}
 		
 		if(KeyHandler.rightPressed) {
-			for(int i = 0; i < 4; i++) {
-				squares[i].x += Square.SIZE;
+			if(!rightCollision) {
+				for(int i = 0; i < 4; i++) {
+					squares[i].x += Square.SIZE;
+				}
 			}
 			KeyHandler.rightPressed = false;
 		}
