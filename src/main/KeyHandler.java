@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-	public static boolean upPressed, downPressed, leftPressed, rightPressed;
+	public static boolean upPressed, downPressed, leftPressed, rightPressed, pausePressed = false;
 	@Override
 	public void keyTyped(KeyEvent e) {}
 
@@ -30,6 +30,9 @@ public class KeyHandler implements KeyListener {
 			case KeyEvent.VK_RIGHT: {
 				rightPressed = true;
 				break;
+			}
+			case KeyEvent.VK_SPACE: {
+				pausePressed = !pausePressed;
 			}
 		}
 	}

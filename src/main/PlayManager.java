@@ -57,6 +57,8 @@ public class PlayManager {
 		if(currentMino != null) {
 			currentMino.draw(graphics);
 		}
+
+		if(KeyHandler.pausePressed) drawPauseWarning(graphics);
 	}
 	
 	private void drawNextTetrominoBox(Graphics2D graphics) {
@@ -85,5 +87,11 @@ public class PlayManager {
 		}
 
 		return mino;
+	}
+
+	private void drawPauseWarning(Graphics2D graphics) {
+		graphics.setColor(Color.yellow);
+		graphics.setFont(graphics.getFont().deriveFont(50f));
+		graphics.drawString("PAUSED", left_x + 70, top_y + 320);
 	}
 }
