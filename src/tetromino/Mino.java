@@ -13,9 +13,7 @@ public class Mino {
 	int autoDropCounter = 0;
 	public int direction = 1;
 	
-	boolean leftCollision;
-	boolean rightCollision;
-	boolean bottomCollision;
+	boolean hasLeftCollision, hasRightCollision, hasBottomCollision, isMinoActive = true;
 	
 	public void create(Color color) {
 		for(int i = 0; i < 4; i++) {
@@ -31,7 +29,7 @@ public class Mino {
 
 		checkRotationCollision();
 
-		if(!leftCollision && !rightCollision && !bottomCollision) {
+		if(!hasLeftCollision && !hasRightCollision && !hasBottomCollision) {
 			this.direction = direction;
 			for(int i = 0; i < 4; i++) {
 				squares[i].x = tempSquares[i].x;
@@ -46,43 +44,48 @@ public class Mino {
 	public void getDirection4() {}	
 
 	public void checkMovementCollision() {
-		leftCollision = false;
-		rightCollision = false;
-		bottomCollision = false;
+		hasLeftCollision = false;
+		hasRightCollision = false;
+		hasBottomCollision = false;
 
 		for(int i = 0; i < squares.length; i++) {
-			if(squares[i].x == PlayManager.left_x) leftCollision = true;
+			if(squares[i].x == PlayManager.left_x) hasLeftCollision = true;
 		}
 		
 		for(int i = 0; i < squares.length; i++) {
-			if(squares[i].x + Square.SIZE == PlayManager.right_x) rightCollision = true;
+			if(squares[i].x + Square.SIZE == PlayManager.right_x) hasRightCollision = true;
 		}
 		
 		for(int i = 0; i < squares.length; i++) {
-			if(squares[i].y + Square.SIZE == PlayManager.bottom_y) bottomCollision = true;
+			if(squares[i].y + Square.SIZE == PlayManager.bottom_y) hasBottomCollision = true;
 		}
 	}
 	public void checkRotationCollision() {
-		leftCollision = false;
-		rightCollision = false;
-		bottomCollision = false;
+		hasLeftCollision = false;
+		hasRightCollision = false;
+		hasBottomCollision = false;
 
 		for(int i = 0; i < squares.length; i++) {
-			if(tempSquares[i].x < PlayManager.left_x) leftCollision = true;
+			if(tempSquares[i].x < PlayManager.left_x) hasLeftCollision = true;
 		}
 		
 		for(int i = 0; i < squares.length; i++) {
-			if(tempSquares[i].x + Square.SIZE > PlayManager.right_x) rightCollision = true;
+			if(tempSquares[i].x + Square.SIZE > PlayManager.right_x) hasRightCollision = true;
 		}
 		
 		for(int i = 0; i < squares.length; i++) {
-			if(tempSquares[i].y + Square.SIZE > PlayManager.bottom_y) bottomCollision = true;
+			if(tempSquares[i].y + Square.SIZE > PlayManager.bottom_y) hasBottomCollision = true;
 		}
 	}
 	
 	public void update() {
 		
 		moveTetromino();
+
+		if(hasBottomCollision) {
+			isMinoActive = false;
+			return;
+		}
 
 		autoDropCounter++;
 		if(autoDropCounter == PlayManager.dropInterval) {
@@ -130,7 +133,7 @@ public class Mino {
 		checkMovementCollision();
 		
 		if(KeyHandler.downPressed) {
-			if(!bottomCollision) {
+			if(!hasBottomCollision) {
 				for(int i = 0; i < 4; i++) {
 					squares[i].y += Square.SIZE;
 				}
@@ -141,7 +144,7 @@ public class Mino {
 		
 		if(KeyHandler.leftPressed) {
 
-			if(!leftCollision) {
+			if(!hasLeftCollision) {
 				for(int i = 0; i < 4; i++) {
 					squares[i].x -= Square.SIZE;
 				}
@@ -150,7 +153,7 @@ public class Mino {
 		}
 		
 		if(KeyHandler.rightPressed) {
-			if(!rightCollision) {
+			if(!hasRightCollision) {
 				for(int i = 0; i < 4; i++) {
 					squares[i].x += Square.SIZE;
 				}
