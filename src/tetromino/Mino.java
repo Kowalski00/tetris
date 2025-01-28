@@ -13,7 +13,8 @@ public class Mino {
 	int autoDropCounter = 0;
 	public int direction = 1;
 	
-	boolean hasLeftCollision, hasRightCollision, hasBottomCollision, isMinoActive = true;
+	boolean hasLeftCollision, hasRightCollision, hasBottomCollision;
+	public boolean isMinoActive = true;
 	
 	public void create(Color color) {
 		for(int i = 0; i < 4; i++) {
@@ -47,6 +48,8 @@ public class Mino {
 		hasLeftCollision = false;
 		hasRightCollision = false;
 		hasBottomCollision = false;
+		
+		checkStaticCollision();
 
 		for(int i = 0; i < squares.length; i++) {
 			if(squares[i].x == PlayManager.left_x) hasLeftCollision = true;
@@ -75,6 +78,26 @@ public class Mino {
 		
 		for(int i = 0; i < squares.length; i++) {
 			if(tempSquares[i].y + Square.SIZE > PlayManager.bottom_y) hasBottomCollision = true;
+		}
+	}
+	
+	private void checkStaticCollision() {
+		
+		for(int i = 0; i < PlayManager.staticSquares.size(); i++) {
+			int targetX = PlayManager.staticSquares.get(i).x;
+			int targetY = PlayManager.staticSquares.get(i).y;
+
+			for(int j = 0; j < squares.length; j++) {
+				if(squares[j].y + Square.SIZE == targetY && squares[j].x == targetX) hasBottomCollision = true;
+			}
+			
+			for(int j = 0; j < squares.length; j++) {
+				if(squares[j].x - Square.SIZE == targetX && squares[j].y == targetY) hasLeftCollision = true;
+			}
+			
+			for(int j = 0; j < squares.length; j++) {
+				if(squares[j].x + Square.SIZE == targetX && squares[j].y == targetY) hasRightCollision = true;
+			}
 		}
 	}
 	
