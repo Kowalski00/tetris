@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.ArrayList;
 import java.util.Random;
 
 import tetromino.Mino;
@@ -28,8 +29,15 @@ public class PlayManager {
 	public static int dropInterval = 60;
 	
 	Mino currentMino;
+	Mino nextMino;
+
 	final int MINO_START_X;
 	final int MINO_START_Y;
+
+	final int NEXT_MINO_X;
+	final int NEXT_MINO_Y;
+
+	public static ArrayList<Square> staticSquares = new ArrayList<>();
 	
 	public PlayManager() {
 		left_x = (GamePanel.WIDTH / 2) - (WIDTH / 2);
@@ -39,13 +47,31 @@ public class PlayManager {
 		
 		MINO_START_X = left_x + (WIDTH / 2) - Square.SIZE;
 		MINO_START_Y = top_y + Square.SIZE;
+
+		NEXT_MINO_X = right_x + 175;
+		NEXT_MINO_Y = top_y + 500;
 		
 		currentMino = pickRandomMino();
+		nextMino = pickRandomMino();
+
 		currentMino.setXY(MINO_START_X, MINO_START_Y);
+		nextMino.setXY(NEXT_MINO_X, NEXT_MINO_Y);
 	}
 	
 	public void update() {
-		currentMino.update();
+		
+		if(!currentMino.isMinoActive) {
+			for(int i = 0; i < 4; i++) {
+				staticSquares.add(currentMino.squares[i]);
+			}
+
+			currentMino = nextMino;
+			nextMino = pickRandomMino();
+
+			currentMino.setXY(MINO_START_X, MINO_START_Y);
+			nextMino.setXY(NEXT_MINO_X, NEXT_MINO_Y);
+		}
+		else currentMino.update();
 	}
 	
 	public void draw(Graphics2D graphics) {
@@ -56,6 +82,14 @@ public class PlayManager {
 
 		if(currentMino != null) {
 			currentMino.draw(graphics);
+		}
+		
+		if(nextMino != null) {
+			nextMino.draw(graphics);
+		}
+		
+		for(int i = 0; i < staticSquares.size(); i++) {
+			staticSquares.get(i).draw(graphics);
 		}
 
 		if(KeyHandler.pausePressed) drawPauseWarning(graphics);
