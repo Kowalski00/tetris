@@ -65,6 +65,8 @@ public class PlayManager {
 				staticSquares.add(currentMino.squares[i]);
 			}
 
+			currentMino.isDeactivating = false;
+
 			currentMino = nextMino;
 			nextMino = pickRandomMino();
 

@@ -12,6 +12,8 @@ public class Mino {
 	public Square tempSquares[] = new Square[4];
 	int autoDropCounter = 0;
 	public int direction = 1;
+	public boolean isDeactivating;
+	public int deactivateCounter = 0;
 	
 	boolean hasLeftCollision, hasRightCollision, hasBottomCollision;
 	public boolean isMinoActive = true;
@@ -102,11 +104,13 @@ public class Mino {
 	}
 	
 	public void update() {
+
+		if(isDeactivating) deactivateMino();
 		
 		moveTetromino();
 
 		if(hasBottomCollision) {
-			isMinoActive = false;
+			isDeactivating = true;	
 			return;
 		}
 
@@ -182,6 +186,18 @@ public class Mino {
 				}
 			}
 			KeyHandler.rightPressed = false;
+		}
+	}
+
+	private void deactivateMino() {
+
+		deactivateCounter++;
+
+		if(deactivateCounter == 45) {
+			deactivateCounter = 0;
+			checkMovementCollision();
+
+			if(hasBottomCollision) isMinoActive = false;
 		}
 	}
 	
