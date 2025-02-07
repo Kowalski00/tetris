@@ -72,6 +72,8 @@ public class PlayManager {
 
 			currentMino.setXY(MINO_START_X, MINO_START_Y);
 			nextMino.setXY(NEXT_MINO_X, NEXT_MINO_Y);
+
+			validateCompletedLines();
 		}
 		else currentMino.update();
 	}
@@ -129,5 +131,45 @@ public class PlayManager {
 		graphics.setColor(Color.yellow);
 		graphics.setFont(graphics.getFont().deriveFont(50f));
 		graphics.drawString("PAUSED", left_x + 70, top_y + 320);
+	}
+
+	private void validateCompletedLines() {
+		int x = left_x;
+		int y = top_y;
+		int blockCount = 0;
+
+		while(x < right_x && y < bottom_y) {
+
+			for(int i = 0; i < staticSquares.size(); i++) {
+				if(staticSquares.get(i).x == x && staticSquares.get(i).y == y) blockCount++;
+			}
+
+			x += Square.SIZE;
+
+			if(x == right_x) {
+
+				if(blockCount == 12) {
+					removeStaticSquares(y);	
+				}
+
+				blockCount = 0;
+				x = left_x;
+				y += Square.SIZE;
+			}
+		}
+	}
+
+	private void removeStaticSquares(int y) {
+		for(int i = staticSquares.size() - 1; i > -1; i--) {
+			if(staticSquares.get(i).y == y) {
+				staticSquares.remove(i);
+			}
+		}
+
+		for(int i = 0; i <staticSquares.size(); i++) {
+			if(staticSquares.get(i).y < y) {
+				staticSquares.get(i).y += Square.SIZE;
+			}
+		}
 	}
 }
