@@ -22,11 +22,16 @@ public class PlayManager {
 
 	final int WIDTH = 360;
 	final int HEIGHT = 600;
+	final int REMOVAL_EFFECT_FRAMES = 10;
 	public static int left_x;
 	public static int right_x;
 	public static int top_y;
 	public static int bottom_y;
 	public static int dropInterval = 60;
+
+	boolean isRemovalEffectCounterOn;
+	int removalEffectCounter;
+	ArrayList<Integer> affectedLines = new ArrayList<Integer>();
 	
 	Mino currentMino;
 	Mino nextMino;
@@ -96,6 +101,8 @@ public class PlayManager {
 			staticSquares.get(i).draw(graphics);
 		}
 
+		if(isRemovalEffectCounterOn) drawSquareRemovalEffect(graphics);
+
 		if(KeyHandler.pausePressed) drawPauseWarning(graphics);
 	}
 	
@@ -149,6 +156,8 @@ public class PlayManager {
 			if(x == right_x) {
 
 				if(blockCount == 12) {
+					isRemovalEffectCounterOn =  true;
+					affectedLines.add(y);
 					removeStaticSquares(y);	
 				}
 
@@ -170,6 +179,22 @@ public class PlayManager {
 			if(staticSquares.get(i).y < y) {
 				staticSquares.get(i).y += Square.SIZE;
 			}
+		}
+	}
+
+	private void drawSquareRemovalEffect(Graphics2D graphics) {
+
+		removalEffectCounter++;
+
+		graphics.setColor(Color.RED);
+		for(int i = 0; i < affectedLines.size(); i++) {
+			graphics.fillRect(left_x, affectedLines.get(i), WIDTH, Square.SIZE);
+		}
+
+		if(removalEffectCounter == REMOVAL_EFFECT_FRAMES) {
+			isRemovalEffectCounterOn = false;
+			removalEffectCounter = 0;
+			affectedLines.clear();
 		}
 	}
 }
