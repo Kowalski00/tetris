@@ -175,7 +175,7 @@ public class PlayManager {
 			}
 		}
 
-		for(int i = 0; i <staticSquares.size(); i++) {
+		for(int i = 0; i < staticSquares.size(); i++) {
 			if(staticSquares.get(i).y < y) {
 				staticSquares.get(i).y += Square.SIZE;
 			}
@@ -186,9 +186,11 @@ public class PlayManager {
 
 		removalEffectCounter++;
 
-		graphics.setColor(Color.RED);
+		graphics.setColor(Color.WHITE);
 		for(int i = 0; i < affectedLines.size(); i++) {
-			graphics.fillRect(left_x, affectedLines.get(i), WIDTH, Square.SIZE);
+			for(int j = 0; j < 12; j++) {
+				graphics.fillRect(left_x + (j * Square.SIZE), affectedLines.get(i), Square.SIZE - (2), Square.SIZE);
+			}
 		}
 
 		if(removalEffectCounter == REMOVAL_EFFECT_FRAMES) {
