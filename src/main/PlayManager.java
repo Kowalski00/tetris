@@ -31,7 +31,7 @@ public class PlayManager {
 
 	boolean isRemovalEffectCounterOn;
 	int removalEffectCounter;
-	ArrayList<Integer> affectedLines = new ArrayList<Integer>();
+	ArrayList<Integer> linesToRemove = new ArrayList<Integer>();
 	
 	Mino currentMino;
 	Mino nextMino;
@@ -70,6 +70,10 @@ public class PlayManager {
 				staticSquares.add(currentMino.squares[i]);
 			}
 
+			if(currentMino.squares[0].x == MINO_START_X && currentMino.squares[0].y == MINO_START_Y) {
+				isGameOver = true;
+			}
+
 			currentMino.isDeactivating = false;
 
 			currentMino = nextMino;
@@ -102,6 +106,8 @@ public class PlayManager {
 		}
 
 		if(isRemovalEffectCounterOn) drawSquareRemovalEffect(graphics);
+
+		if(isGameOver) drawGameOverWarning(graphics);
 
 		if(KeyHandler.pausePressed) drawPauseWarning(graphics);
 	}
@@ -157,7 +163,7 @@ public class PlayManager {
 
 				if(blockCount == 12) {
 					isRemovalEffectCounterOn =  true;
-					affectedLines.add(y);
+					linesToRemove.add(y);
 					removeStaticSquares(y);	
 				}
 
@@ -187,16 +193,22 @@ public class PlayManager {
 		removalEffectCounter++;
 
 		graphics.setColor(Color.WHITE);
-		for(int i = 0; i < affectedLines.size(); i++) {
+		for(int i = 0; i < linesToRemove.size(); i++) {
 			for(int j = 0; j < 12; j++) {
-				graphics.fillRect(left_x + (j * Square.SIZE), affectedLines.get(i), Square.SIZE - (2), Square.SIZE);
+				graphics.fillRect(left_x + (j * Square.SIZE), linesToRemove.get(i), Square.SIZE - 2, Square.SIZE);
 			}
 		}
 
 		if(removalEffectCounter == REMOVAL_EFFECT_FRAMES) {
 			isRemovalEffectCounterOn = false;
 			removalEffectCounter = 0;
-			affectedLines.clear();
+			linesToRemove.clear();
 		}
+	}
+
+	private void drawGameOverWarning(Graphics2D graphics) {
+		graphics.setColor(Color.yellow);
+		graphics.setFont(graphics.getFont().deriveFont(50f));
+		graphics.drawString("GAME OVER", left_x + 70, top_y + 320);
 	}
 }
