@@ -28,6 +28,10 @@ public class PlayManager {
 	public static int top_y;
 	public static int bottom_y;
 	public static int dropInterval = 60;
+	public static boolean isGameOver = false;
+	int level = 1;
+	int lines = 0;
+	int score = 0;
 
 	boolean isRemovalEffectCounterOn;
 	int removalEffectCounter;
@@ -91,7 +95,9 @@ public class PlayManager {
 		graphics.setColor(Color.white);
 		graphics.setStroke(new BasicStroke(4f));
 		graphics.drawRect(left_x - 4, top_y - 4, WIDTH + 8, HEIGHT + 8);
+
 		drawNextTetrominoBox(graphics);
+		drawHighscoreBox(graphics);
 
 		if(currentMino != null) {
 			currentMino.draw(graphics);
@@ -150,6 +156,7 @@ public class PlayManager {
 		int x = left_x;
 		int y = top_y;
 		int blockCount = 0;
+		int lineCount = 0;
 
 		while(x < right_x && y < bottom_y) {
 
@@ -165,12 +172,28 @@ public class PlayManager {
 					isRemovalEffectCounterOn =  true;
 					linesToRemove.add(y);
 					removeStaticSquares(y);	
+					lineCount++;
+					lines++;
+					increaseDifficulty();
 				}
 
 				blockCount = 0;
 				x = left_x;
 				y += Square.SIZE;
 			}
+		}
+
+		if(lineCount > 0) {
+			int singleLineScore = 10 * level;
+			score += singleLineScore * lineCount;
+		}
+	}
+
+	private void increaseDifficulty() {
+		if(lines % 10 == 0 && dropInterval > 1) {
+			level++;
+			if(dropInterval > 10) dropInterval -= 10;
+			else dropInterval -= 1;
 		}
 	}
 
@@ -210,5 +233,21 @@ public class PlayManager {
 		graphics.setColor(Color.yellow);
 		graphics.setFont(graphics.getFont().deriveFont(50f));
 		graphics.drawString("GAME OVER", left_x + 70, top_y + 320);
+	}
+	
+	private void drawHighscoreBox(Graphics2D graphics) {
+		int x = right_x + 100;
+		int y = bottom_y - 200;
+		graphics.drawRect(x, top_y, 250, 300);
+
+		graphics.setFont(new Font("Arial", Font.PLAIN, 30));
+		graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		x += 40;
+		y = top_y + 90;
+		graphics.drawString("LEVEL: " + level, x, y);
+		y += 70;
+		graphics.drawString("LINES: " + lines, x, y);
+		y += 70;
+		graphics.drawString("SCORE: " + score, x, y);
 	}
 }
