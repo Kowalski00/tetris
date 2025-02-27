@@ -76,6 +76,7 @@ public class PlayManager {
 
 			if(currentMino.squares[0].x == MINO_START_X && currentMino.squares[0].y == MINO_START_Y) {
 				isGameOver = true;
+				GamePanel.soundEffect.play(2, false);
 			}
 
 			currentMino.isDeactivating = false;
@@ -111,9 +112,14 @@ public class PlayManager {
 			staticSquares.get(i).draw(graphics);
 		}
 
-		if(isRemovalEffectCounterOn) drawSquareRemovalEffect(graphics);
+		if(isRemovalEffectCounterOn) {
+			drawSquareRemovalEffect(graphics);
+		}
 
-		if(isGameOver) drawGameOverWarning(graphics);
+		if(isGameOver) {
+			drawGameOverWarning(graphics);
+			GamePanel.music.stop();
+		}
 
 		if(KeyHandler.pausePressed) drawPauseWarning(graphics);
 	}

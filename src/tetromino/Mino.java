@@ -3,6 +3,7 @@ package tetromino;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import main.GamePanel;
 import main.KeyHandler;
 import main.PlayManager;
 
@@ -110,6 +111,7 @@ public class Mino {
 		moveTetromino();
 
 		if(hasBottomCollision) {
+			if(!isDeactivating) GamePanel.soundEffect.play(4, false);
 			isDeactivating = true;	
 			return;
 		}
@@ -155,6 +157,7 @@ public class Mino {
 				}
 			}
 			KeyHandler.upPressed = false;
+			GamePanel.soundEffect.play(3, false);
 		}
 		
 		checkMovementCollision();

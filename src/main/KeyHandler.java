@@ -32,6 +32,12 @@ public class KeyHandler implements KeyListener {
 				break;
 			}
 			case KeyEvent.VK_SPACE: {
+				if(pausePressed) {
+					GamePanel.music.play(0, true);
+					GamePanel.music.loop();
+				} else {
+					GamePanel.music.stop();
+				}
 				pausePressed = !pausePressed;
 			}
 		}
