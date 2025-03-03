@@ -46,9 +46,14 @@ public class PlayManager {
 	final int NEXT_MINO_X;
 	final int NEXT_MINO_Y;
 
+	GamePanel gamePanel;
+
 	public static ArrayList<Square> staticSquares = new ArrayList<>();
 	
-	public PlayManager() {
+	public PlayManager(GamePanel gamePanel) {
+
+		this.gamePanel = gamePanel;
+
 		left_x = (GamePanel.WIDTH / 2) - (WIDTH / 2);
 		right_x = left_x + WIDTH;
 		top_y = 50;
@@ -68,6 +73,8 @@ public class PlayManager {
 	}
 	
 	public void update() {
+
+		if(this.gamePanel.gameState != this.gamePanel.playState) return;
 		
 		if(!currentMino.isMinoActive) {
 			for(int i = 0; i < 4; i++) {

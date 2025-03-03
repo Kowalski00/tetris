@@ -15,11 +15,12 @@ public class Sound {
 	URL url[] = new URL[10];
 
 	public Sound() {
-		url[0] = getClass().getResource("/soundtrack.wav");
+		url[0] = getClass().getResource("/titleSoundtrack.wav");
 		url[1] = getClass().getResource("/delete line.wav");
 		url[2] = getClass().getResource("/gameover.wav");
 		url[3] = getClass().getResource("/rotation.wav");
 		url[4] = getClass().getResource("/touch floor.wav");
+		url[5] = getClass().getResource("/playSoundtrack.wav");
 	}
 
 	public void play(int i, boolean isPlayingSoundtrack) {
