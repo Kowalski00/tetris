@@ -22,7 +22,6 @@ public class GamePanel extends JPanel implements Runnable{
 	public int gameState;
 	public final int titleState = 0;
 	public final int playState = 1;
-
 	
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(WIDTH,HEIGHT));
@@ -31,8 +30,8 @@ public class GamePanel extends JPanel implements Runnable{
 		this.addKeyListener(new KeyHandler(this));
 		this.setFocusable(true);
 		
-		playManager = new PlayManager(this);
-		titleManager = new TitleManager();
+		this.playManager = new PlayManager(this);
+		this.titleManager = new TitleManager();
 	}
 	
 	public void launchGame() {
@@ -41,7 +40,7 @@ public class GamePanel extends JPanel implements Runnable{
 
 		music.play(0, true);
 		music.loop();
-		gameState = titleState;
+		this.gameState = titleState;
 	}
 
 	@Override
@@ -66,19 +65,19 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	private void update() {
-		if(!KeyHandler.pausePressed && !PlayManager.isGameOver) playManager.update();
+		if(!KeyHandler.pausePressed && !this.playManager.isGameOver) this.playManager.update();
 	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 
-		if(gameState == titleState) {
-			titleManager.draw(g2);
+		if(this.gameState == titleState) {
+			this.titleManager.draw(g2);
 		}
 
-		if(gameState == playState ) {
-			playManager.draw(g2);
+		if(this.gameState == playState ) {
+			this.playManager.draw(g2);
 		}
 	}
 	

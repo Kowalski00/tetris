@@ -11,7 +11,7 @@ public class TitleManager {
     private final int X_DISTANCE_ARROW_MENU_SELECTION = 30;
 
     public TitleManager() {
-        menuSelectionNumber = 0;
+        this.menuSelectionNumber = 0;
     }
     
     public void draw(Graphics2D graphics) {
@@ -26,24 +26,24 @@ public class TitleManager {
         int x = getXForCenteredText(graphics, text);
         int y = GamePanel.HEIGHT / 2;
         graphics.drawString(text, x, y);
-        if(menuSelectionNumber == 0) {
-            graphics.drawString(">", x - X_DISTANCE_ARROW_MENU_SELECTION, y);
+        if(this.menuSelectionNumber == 0) {
+            graphics.drawString(">", x - this.X_DISTANCE_ARROW_MENU_SELECTION, y);
         }
 
         text = "HIGHSCORE";
     	x = getXForCenteredText(graphics, text);
         y += 50;
         graphics.drawString(text, x, y);
-        if(menuSelectionNumber == 1) {
-            graphics.drawString(">", x - X_DISTANCE_ARROW_MENU_SELECTION, y);
+        if(this.menuSelectionNumber == 1) {
+            graphics.drawString(">", x - this.X_DISTANCE_ARROW_MENU_SELECTION, y);
         }
 
         text = "QUIT";
     	x = getXForCenteredText(graphics, text);
         y += 50;
         graphics.drawString(text, x, y);
-        if(menuSelectionNumber == 2) {
-            graphics.drawString(">", x - X_DISTANCE_ARROW_MENU_SELECTION, y);
+        if(this.menuSelectionNumber == 2) {
+            graphics.drawString(">", x - this.X_DISTANCE_ARROW_MENU_SELECTION, y);
         }
     }
 
@@ -66,7 +66,7 @@ public class TitleManager {
     }
     
     public int getMenuSelectionNumber() {
-		return menuSelectionNumber;
+		return this.menuSelectionNumber;
 	}
 
 	public void setMenuSelectionNumber(int modifier) {
