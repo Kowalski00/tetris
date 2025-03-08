@@ -40,6 +40,14 @@ public class PlayManager {
 	Mino currentMino;
 	Mino nextMino;
 
+	private int minoICounter = 0;
+	private int minoJCounter = 0;
+	private int minoLCounter = 0;
+	private int minoOCounter = 0;
+	private int minoSCounter = 0;
+	private int minoTCounter = 0;
+	private int minoZCounter = 0;
+
 	final int MINO_START_X;
 	final int MINO_START_Y;
 
@@ -66,6 +74,7 @@ public class PlayManager {
 		NEXT_MINO_Y = top_y + 500;
 		
 		currentMino = pickRandomMino();
+		this.getCurrentMinoCounter(currentMino);
 		nextMino = pickRandomMino();
 
 		currentMino.setXY(MINO_START_X, MINO_START_Y);
@@ -89,6 +98,7 @@ public class PlayManager {
 			currentMino.isDeactivating = false;
 
 			currentMino = nextMino;
+			this.getCurrentMinoCounter(currentMino);
 			nextMino = pickRandomMino();
 
 			currentMino.setXY(MINO_START_X, MINO_START_Y);
@@ -106,6 +116,7 @@ public class PlayManager {
 
 		drawNextTetrominoBox(graphics);
 		drawHighscoreBox(graphics);
+		drawTetrominosCountingBox(graphics);
 
 		if(currentMino != null) {
 			currentMino.draw(graphics);
@@ -147,13 +158,13 @@ public class PlayManager {
 		int i = new Random().nextInt(7);
 
 		switch(i){
-			case 0: mino = new Mino_I();break;
-			case 1: mino = new Mino_J();break;
-			case 2: mino = new Mino_L();break;
-			case 3: mino = new Mino_O();break;
-			case 4: mino = new Mino_S();break;
-			case 5: mino = new Mino_T();break;
-			case 6: mino = new Mino_Z();break;
+			case 0: mino = new Mino_I(null);break;
+			case 1: mino = new Mino_J(null);break;
+			case 2: mino = new Mino_L(null);break;
+			case 3: mino = new Mino_O(null);break;
+			case 4: mino = new Mino_S(null);break;
+			case 5: mino = new Mino_T(null);break;
+			case 6: mino = new Mino_Z(null);break;
 		}
 
 		return mino;
@@ -262,5 +273,63 @@ public class PlayManager {
 		graphics.drawString("LINES: " + lines, x, y);
 		y += 70;
 		graphics.drawString("SCORE: " + score, x, y);
+	}
+
+	private void drawTetrominosCountingBox(Graphics2D graphics) {
+
+		graphics.drawRect(left_x - 300, bottom_y - 575, 200, 575);
+
+		int counterX = left_x - 250;
+		int counterY = bottom_y - 50;
+		int ySpreader = 5;
+		
+		graphics.setFont(new Font("Arial", Font.PLAIN, 30));
+		graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+		Mino mino = new Mino_I(Color.GRAY);
+		mino.setXY(counterX, counterY);mino.draw(graphics);
+		graphics.drawString(String.valueOf(minoICounter), counterX + 100, counterY + 25);
+
+		mino = new Mino_T(Color.GRAY);
+		counterY -= (Square.SIZE) + ySpreader;
+		mino.setXY(counterX, counterY);mino.draw(graphics);
+		graphics.drawString(String.valueOf(minoTCounter), counterX + 100, counterY);
+
+		mino = new Mino_J(Color.GRAY);
+		counterY -= (Square.SIZE * 3) + ySpreader;
+		mino.setXY(counterX, counterY);mino.draw(graphics);
+		graphics.drawString(String.valueOf(minoJCounter), counterX + 100, counterY + 25);
+
+		mino = new Mino_L(Color.GRAY);
+		counterY -= (Square.SIZE * 3) + ySpreader;
+		mino.setXY(counterX, counterY);mino.draw(graphics);
+		graphics.drawString(String.valueOf(minoLCounter), counterX + 100, counterY + 25);
+
+		mino = new Mino_O(Color.GRAY);
+		counterY -= (Square.SIZE * 3) + ySpreader;
+		mino.setXY(counterX, counterY);mino.draw(graphics);
+		graphics.drawString(String.valueOf(minoOCounter), counterX + 100, counterY + 25);
+
+		mino = new Mino_S(Color.GRAY);
+		counterY -= (Square.SIZE * 2) + ySpreader;
+		mino.setXY(counterX, counterY);mino.draw(graphics);
+		graphics.drawString(String.valueOf(minoSCounter), counterX + 100, counterY + 25);
+
+		mino = new Mino_Z(Color.GRAY);
+		counterY -= (Square.SIZE * 3) + ySpreader;
+		mino.setXY(counterX, counterY);mino.draw(graphics);
+		graphics.drawString(String.valueOf(minoZCounter), counterX + 100, counterY + 25);
+	}
+
+	private void getCurrentMinoCounter(Mino currentMino) {
+		String className = currentMino.getClass().getName();
+		
+		if(className.contains("_I")) minoICounter++;
+		if(className.contains("_J")) minoJCounter++;
+		if(className.contains("_L")) minoLCounter++;
+		if(className.contains("_S")) minoSCounter++;
+		if(className.contains("_Z")) minoZCounter++;
+		if(className.contains("_T")) minoTCounter++;
+		if(className.contains("_O")) minoOCounter++;
 	}
 }

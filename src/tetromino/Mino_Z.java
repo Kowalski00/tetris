@@ -4,8 +4,9 @@ import java.awt.Color;
 
 public class Mino_Z extends Mino {
 
-	public Mino_Z() {
-		create(Color.GRAY);
+	public Mino_Z(Color color) {
+		if(color == null) create(Color.PINK);
+		else create(color);
 	}
 
 	public void setXY(int x, int y) {
