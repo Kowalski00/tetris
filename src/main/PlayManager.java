@@ -64,7 +64,7 @@ public class PlayManager {
 
 		left_x = (GamePanel.WIDTH / 2) - (WIDTH / 2);
 		right_x = left_x + WIDTH;
-		top_y = 50;
+		top_y = 75;
 		bottom_y = top_y + HEIGHT;
 		
 		MINO_START_X = left_x + (WIDTH / 2) - Square.SIZE;
@@ -99,12 +99,12 @@ public class PlayManager {
 
 			currentMino = nextMino;
 			this.getCurrentMinoCounter(currentMino);
-			nextMino = pickRandomMino();
+			nextMino = this.pickRandomMino();
 
 			currentMino.setXY(MINO_START_X, MINO_START_Y);
 			nextMino.setXY(NEXT_MINO_X, NEXT_MINO_Y);
 
-			validateCompletedLines();
+			this.validateCompletedLines();
 		}
 		else currentMino.update();
 	}
@@ -114,9 +114,9 @@ public class PlayManager {
 		graphics.setStroke(new BasicStroke(4f));
 		graphics.drawRect(left_x - 4, top_y - 4, WIDTH + 8, HEIGHT + 8);
 
-		drawNextTetrominoBox(graphics);
-		drawHighscoreBox(graphics);
-		drawTetrominosCountingBox(graphics);
+		this.drawNextTetrominoBox(graphics);
+		this.drawHighscoreBox(graphics);
+		this.drawTetrominosCountingBox(graphics);
 
 		if(currentMino != null) {
 			currentMino.draw(graphics);
@@ -131,15 +131,15 @@ public class PlayManager {
 		}
 
 		if(isRemovalEffectCounterOn) {
-			drawSquareRemovalEffect(graphics);
+			this.drawSquareRemovalEffect(graphics);
 		}
 
 		if(isGameOver) {
-			drawGameOverWarning(graphics);
+			this.drawGameOverWarning(graphics);
 			GamePanel.music.stop();
 		}
 
-		if(KeyHandler.pausePressed) drawPauseWarning(graphics);
+		if(KeyHandler.pausePressed) this.drawPauseWarning(graphics);
 	}
 	
 	private void drawNextTetrominoBox(Graphics2D graphics) {
@@ -195,10 +195,10 @@ public class PlayManager {
 				if(blockCount == 12) {
 					isRemovalEffectCounterOn =  true;
 					linesToRemove.add(y);
-					removeStaticSquares(y);	
+					this.removeStaticSquares(y);	
 					lineCount++;
 					lines++;
-					increaseDifficulty();
+					this.increaseDifficulty();
 				}
 
 				blockCount = 0;
@@ -262,16 +262,18 @@ public class PlayManager {
 	private void drawHighscoreBox(Graphics2D graphics) {
 		int x = right_x + 100;
 		int y = bottom_y - 200;
-		graphics.drawRect(x, top_y, 250, 300);
+		graphics.drawRect(x, top_y, 200, 200);
 
 		graphics.setFont(new Font("Arial", Font.PLAIN, 30));
 		graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		x += 40;
-		y = top_y + 90;
+		x += 20;
+		y = top_y + 35;
 		graphics.drawString("LEVEL: " + level, x, y);
-		y += 70;
+		y += 50;
 		graphics.drawString("LINES: " + lines, x, y);
-		y += 70;
+		y += 50;
+		graphics.drawString("TOP: " + 0000, x, y);
+		y += 50;
 		graphics.drawString("SCORE: " + score, x, y);
 	}
 
