@@ -27,7 +27,6 @@ public class KeyHandler implements KeyListener {
 				}
 				case KeyEvent.VK_DOWN: {
 					this.gamePanel.titleManager.setMenuSelectionNumber(1);
-					leftPressed = true;
 					break;
 				}
 				case KeyEvent.VK_ENTER: {
@@ -42,7 +41,29 @@ public class KeyHandler implements KeyListener {
 			}
 		}
 		
-		if(this.gamePanel.gameState == this.gamePanel.playState) {
+		if(this.gamePanel.gameState == this.gamePanel.playState && this.gamePanel.playManager.isGameOver) {
+			switch (code) {
+				case KeyEvent.VK_UP: {
+					this.gamePanel.playManager.setMenuSelectionNumber(-1);
+					break;
+				}
+				case KeyEvent.VK_DOWN: {
+					this.gamePanel.playManager.setMenuSelectionNumber(1);
+					break;
+				}
+				case KeyEvent.VK_ENTER: {
+					if(this.gamePanel.playManager.getMenuSelectionNumber() == 0) {
+						//this.gamePanel.gameState = 1;
+					}
+					if(this.gamePanel.playManager.getMenuSelectionNumber() == 1) {
+						System.exit(0);
+					}
+					break;
+				}
+			}
+		}
+		
+		if(this.gamePanel.gameState == this.gamePanel.playState && !this.gamePanel.playManager.isGameOver) {
 			switch (code) {
 				case KeyEvent.VK_UP: {
 					upPressed = true;

@@ -23,6 +23,7 @@ public class PlayManager {
 	final int WIDTH = 360;
 	final int HEIGHT = 600;
 	final int REMOVAL_EFFECT_FRAMES = 10;
+    private final int X_DISTANCE_ARROW_MENU_SELECTION = 30;
 	public static int left_x;
 	public static int right_x;
 	public static int top_y;
@@ -31,7 +32,12 @@ public class PlayManager {
 	public static boolean isGameOver = false;
 	int level = 1;
 	int lines = 0;
-	int score = 0;
+	int currentScore = 0;
+	private static int gameOverWarningPosY = 450;
+    private int menuSelectionNumber;
+	
+	public static int highScore = -1;
+	private Boolean isNewHighScore = false;
 
 	boolean isRemovalEffectCounterOn;
 	int removalEffectCounter;
@@ -61,6 +67,7 @@ public class PlayManager {
 	public PlayManager(GamePanel gamePanel) {
 
 		this.gamePanel = gamePanel;
+		this.menuSelectionNumber = 0;
 
 		left_x = (GamePanel.WIDTH / 2) - (WIDTH / 2);
 		right_x = left_x + WIDTH;
@@ -110,10 +117,8 @@ public class PlayManager {
 	}
 	
 	public void draw(Graphics2D graphics) {
-		graphics.setColor(Color.white);
-		graphics.setStroke(new BasicStroke(4f));
-		graphics.drawRect(left_x - 4, top_y - 4, WIDTH + 8, HEIGHT + 8);
-
+		
+		this.drawMainGameBox(graphics);
 		this.drawNextTetrominoBox(graphics);
 		this.drawHighscoreBox(graphics);
 		this.drawTetrominosCountingBox(graphics);
@@ -133,13 +138,20 @@ public class PlayManager {
 		if(isRemovalEffectCounterOn) {
 			this.drawSquareRemovalEffect(graphics);
 		}
-
+	
 		if(isGameOver) {
+			this.checkHighScore();
 			this.drawGameOverWarning(graphics);
 			GamePanel.music.stop();
 		}
 
 		if(KeyHandler.pausePressed) this.drawPauseWarning(graphics);
+	}
+
+	private void drawMainGameBox(Graphics2D graphics) {
+		graphics.setColor(Color.white);
+		graphics.setStroke(new BasicStroke(4f));
+		graphics.drawRect(left_x - 4, top_y - 4, WIDTH + 8, HEIGHT + 8);
 	}
 	
 	private void drawNextTetrominoBox(Graphics2D graphics) {
@@ -173,7 +185,8 @@ public class PlayManager {
 	private void drawPauseWarning(Graphics2D graphics) {
 		graphics.setColor(Color.yellow);
 		graphics.setFont(graphics.getFont().deriveFont(50f));
-		graphics.drawString("PAUSED", left_x + 70, top_y + 320);
+		String warningText= "PAUSED";
+		graphics.drawString(warningText, 930, top_y + 320);
 	}
 
 	private void validateCompletedLines() {
@@ -209,7 +222,7 @@ public class PlayManager {
 
 		if(lineCount > 0) {
 			int singleLineScore = 10 * level;
-			score += singleLineScore * lineCount;
+			currentScore += singleLineScore * lineCount;
 		}
 	}
 
@@ -252,11 +265,23 @@ public class PlayManager {
 			linesToRemove.clear();
 		}
 	}
+	
+	private void checkHighScore() {
+		this.isNewHighScore = true;
+		if(currentScore <= highScore) {
+			this.isNewHighScore = false;
+			this.menuSelectionNumber = 1;
+		}
+	}
 
 	private void drawGameOverWarning(Graphics2D graphics) {
+		graphics.setColor( new Color(255,255,255,50) );
+		graphics.fillRect(left_x - 4, top_y - 4, WIDTH + 8, HEIGHT + 8);
 		graphics.setColor(Color.yellow);
 		graphics.setFont(graphics.getFont().deriveFont(50f));
-		graphics.drawString("GAME OVER", left_x + 70, top_y + 320);
+		graphics.drawString("GAME OVER", left_x + 30, gameOverWarningPosY);
+		if(gameOverWarningPosY != top_y + HEIGHT) gameOverWarningPosY++;
+		this.drawMenu(graphics);
 	}
 	
 	private void drawHighscoreBox(Graphics2D graphics) {
@@ -274,8 +299,54 @@ public class PlayManager {
 		y += 50;
 		graphics.drawString("TOP: " + 0000, x, y);
 		y += 50;
-		graphics.drawString("SCORE: " + score, x, y);
+		graphics.drawString("SCORE: " + currentScore, x, y);
 	}
+
+	public void drawMenu(Graphics2D graphics) {
+
+		graphics.setColor(Color.WHITE);
+    	graphics.setFont(graphics.getFont().deriveFont(Font.BOLD, 36F));
+
+        String text = "SET SCORE";
+        int x = getXForCenteredText(graphics, text);
+        int y = GamePanel.HEIGHT * 1 / 3;
+        if(this.isNewHighScore) {
+        	graphics.drawString(text, x, y);
+        	if(this.menuSelectionNumber == 0) {
+        		graphics.drawString(">", x - this.X_DISTANCE_ARROW_MENU_SELECTION, y);
+        	}
+        }
+
+        text = "MAIN MENU";
+    	x = getXForCenteredText(graphics, text);
+        y += 50;
+        graphics.drawString(text, x, y);
+        if(this.menuSelectionNumber == 1) {
+            graphics.drawString(">", x - this.X_DISTANCE_ARROW_MENU_SELECTION, y);
+        }
+    }
+	
+	public int getXForCenteredText(Graphics2D graphics, String text) {
+        int length = (int) graphics.getFontMetrics().getStringBounds(text, graphics).getWidth();
+        return GamePanel.WIDTH / 2 - length / 2;
+    }
+	
+	public int getMenuSelectionNumber() {
+		return this.menuSelectionNumber;
+	}
+
+	public void setMenuSelectionNumber(int modifier) {
+        int result = this.menuSelectionNumber + modifier;
+
+        if(result < 0) result = 1;
+
+        if(result > 1) result = 0;
+        
+        if(!this.isNewHighScore) result = 1;
+
+		this.menuSelectionNumber = result;
+	}
+
 
 	private void drawTetrominosCountingBox(Graphics2D graphics) {
 

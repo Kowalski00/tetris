@@ -15,6 +15,7 @@ public class GamePanel extends JPanel implements Runnable{
 	Thread gameThread;
 	PlayManager playManager;
 	TitleManager titleManager;
+	HighScoreManager highScoreManager;
 
 	public static Sound music = new Sound();
 	public static Sound soundEffect = new Sound();
@@ -22,6 +23,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public int gameState;
 	public final int titleState = 0;
 	public final int playState = 1;
+	public final int highScoreState = 2;
 	
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(WIDTH,HEIGHT));
@@ -32,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		this.playManager = new PlayManager(this);
 		this.titleManager = new TitleManager();
+		this.highScoreManager = new HighScoreManager();
 	}
 	
 	public void launchGame() {
@@ -76,8 +79,13 @@ public class GamePanel extends JPanel implements Runnable{
 			this.titleManager.draw(g2);
 		}
 
-		if(this.gameState == playState ) {
+		if(this.gameState == playState) {
 			this.playManager.draw(g2);
+		}
+		
+		if(this.gameState == highScoreState) {
+			this.highScoreManager.setCurrentScore(this.playManager.currentScore);
+			this.highScoreManager.draw(g2);
 		}
 	}
 	
