@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import tetromino.Mino;
+import tetromino.Mino_G;
 import tetromino.Mino_I;
 import tetromino.Mino_J;
 import tetromino.Mino_L;
@@ -86,6 +87,13 @@ public class PlayManager {
 
 		currentMino.setXY(MINO_START_X, MINO_START_Y);
 		nextMino.setXY(NEXT_MINO_X, NEXT_MINO_Y);
+
+		//isGameOver = true;
+		//if(isGameOver) {
+		//	currentMino = new Mino_G();
+		//	currentMino.setXY(left_x, top_y + (HEIGHT/2) - Square.SIZE);
+		//	nextMino = null;
+		//}
 	}
 	
 	public void update() {
@@ -112,8 +120,18 @@ public class PlayManager {
 			nextMino.setXY(NEXT_MINO_X, NEXT_MINO_Y);
 
 			this.validateCompletedLines();
+			if(isGameOver) {
+				currentMino = new Mino_G();
+				currentMino.setXY(left_x, top_y + (HEIGHT/2) - Square.SIZE);
+				nextMino = null;
+			}
 		}
 		else currentMino.update();
+	}
+	
+	public void updateGameOver() {
+		if(this.gamePanel.gameState != this.gamePanel.playState) return;
+		currentMino.updateGameOver();
 	}
 	
 	public void draw(Graphics2D graphics) {
@@ -124,7 +142,8 @@ public class PlayManager {
 		this.drawTetrominosCountingBox(graphics);
 
 		if(currentMino != null) {
-			currentMino.draw(graphics);
+			if(!isGameOver) currentMino.draw(graphics);
+			else currentMino.drawForGO(graphics);
 		}
 		
 		if(nextMino != null) {
@@ -140,6 +159,7 @@ public class PlayManager {
 		}
 	
 		if(isGameOver) {
+			this.changeStaticSquaresColor();
 			this.checkHighScore();
 			this.drawGameOverWarning(graphics);
 			GamePanel.music.stop();
@@ -277,10 +297,10 @@ public class PlayManager {
 	private void drawGameOverWarning(Graphics2D graphics) {
 		graphics.setColor( new Color(255,255,255,50) );
 		graphics.fillRect(left_x - 4, top_y - 4, WIDTH + 8, HEIGHT + 8);
-		graphics.setColor(Color.yellow);
-		graphics.setFont(graphics.getFont().deriveFont(50f));
-		graphics.drawString("GAME OVER", left_x + 30, gameOverWarningPosY);
-		if(gameOverWarningPosY != top_y + HEIGHT) gameOverWarningPosY++;
+		//graphics.setColor(Color.yellow);
+		//graphics.setFont(graphics.getFont().deriveFont(50f));
+		//graphics.drawString("GAME OVER", left_x + 30, gameOverWarningPosY);
+		//if(gameOverWarningPosY != top_y + HEIGHT) gameOverWarningPosY++;
 		this.drawMenu(graphics);
 	}
 	
@@ -404,5 +424,12 @@ public class PlayManager {
 		if(className.contains("_Z")) minoZCounter++;
 		if(className.contains("_T")) minoTCounter++;
 		if(className.contains("_O")) minoOCounter++;
+	}
+	
+	private void changeStaticSquaresColor() {
+		
+		for (Square sqr : staticSquares) {
+			sqr.color = new Color(255,255,255,50);
+		}
 	}
 }
