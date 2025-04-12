@@ -9,10 +9,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import tetromino.Mino;
+import tetromino.Mino_A;
+import tetromino.Mino_E;
 import tetromino.Mino_G;
 import tetromino.Mino_I;
 import tetromino.Mino_J;
 import tetromino.Mino_L;
+import tetromino.Mino_M;
 import tetromino.Mino_O;
 import tetromino.Mino_S;
 import tetromino.Mino_T;
@@ -31,6 +34,7 @@ public class PlayManager {
 	public static int bottom_y;
 	public static int dropInterval = 60;
 	public static boolean isGameOver = false;
+	public static boolean isChangingToGameOver = false;
 	int level = 1;
 	int lines = 0;
 	int currentScore = 0;
@@ -55,6 +59,8 @@ public class PlayManager {
 	private int minoTCounter = 0;
 	private int minoZCounter = 0;
 
+	private int gameOverIndexCounter = 0;
+
 	final int MINO_START_X;
 	final int MINO_START_Y;
 
@@ -64,6 +70,7 @@ public class PlayManager {
 	GamePanel gamePanel;
 
 	public static ArrayList<Square> staticSquares = new ArrayList<>();
+	public static ArrayList<Square> goStaticSquares = new ArrayList<>();
 	
 	public PlayManager(GamePanel gamePanel) {
 
@@ -87,13 +94,6 @@ public class PlayManager {
 
 		currentMino.setXY(MINO_START_X, MINO_START_Y);
 		nextMino.setXY(NEXT_MINO_X, NEXT_MINO_Y);
-
-		//isGameOver = true;
-		//if(isGameOver) {
-		//	currentMino = new Mino_G();
-		//	currentMino.setXY(left_x, top_y + (HEIGHT/2) - Square.SIZE);
-		//	nextMino = null;
-		//}
 	}
 	
 	public void update() {
@@ -107,6 +107,7 @@ public class PlayManager {
 
 			if(currentMino.squares[0].x == MINO_START_X && currentMino.squares[0].y == MINO_START_Y) {
 				isGameOver = true;
+				isChangingToGameOver = true;
 				GamePanel.soundEffect.play(2, false);
 			}
 
@@ -120,18 +121,30 @@ public class PlayManager {
 			nextMino.setXY(NEXT_MINO_X, NEXT_MINO_Y);
 
 			this.validateCompletedLines();
-			if(isGameOver) {
-				currentMino = new Mino_G();
-				currentMino.setXY(left_x, top_y + (HEIGHT/2) - Square.SIZE);
-				nextMino = null;
-			}
 		}
 		else currentMino.update();
 	}
 	
 	public void updateGameOver() {
 		if(this.gamePanel.gameState != this.gamePanel.playState) return;
-		currentMino.updateGameOver();
+
+		if(isChangingToGameOver) {
+			isChangingToGameOver = false;
+			this.setNewGoMino();
+			return;
+		}
+
+		if(!currentMino.isMinoActive) {
+			for(int i = 0; i < 16; i++) {
+				goStaticSquares.add(currentMino.squaresGO[i]);
+			}
+
+			currentMino.isDeactivating = false;
+
+			if(isGameOver) this.setNewGoMino();
+		}
+		else currentMino.updateGameOver();
+
 	}
 	
 	public void draw(Graphics2D graphics) {
@@ -159,6 +172,9 @@ public class PlayManager {
 		}
 	
 		if(isGameOver) {
+			for(int i = 0; i < goStaticSquares.size(); i++) {
+				goStaticSquares.get(i).draw(graphics);
+			}
 			this.changeStaticSquaresColor();
 			this.checkHighScore();
 			this.drawGameOverWarning(graphics);
@@ -328,8 +344,8 @@ public class PlayManager {
     	graphics.setFont(graphics.getFont().deriveFont(Font.BOLD, 36F));
 
         String text = "SET SCORE";
-        int x = getXForCenteredText(graphics, text);
-        int y = GamePanel.HEIGHT * 1 / 3;
+        int x = right_x + 120;
+        int y = GamePanel.HEIGHT / 2;
         if(this.isNewHighScore) {
         	graphics.drawString(text, x, y);
         	if(this.menuSelectionNumber == 0) {
@@ -338,7 +354,6 @@ public class PlayManager {
         }
 
         text = "MAIN MENU";
-    	x = getXForCenteredText(graphics, text);
         y += 50;
         graphics.drawString(text, x, y);
         if(this.menuSelectionNumber == 1) {
@@ -431,5 +446,37 @@ public class PlayManager {
 		for (Square sqr : staticSquares) {
 			sqr.color = new Color(255,255,255,50);
 		}
+	}
+	
+	private void setNewGoMino() {
+		
+		if(this.gameOverIndexCounter > 7) return;
+
+		currentMino = getGOMino(this.gameOverIndexCounter);
+		
+		if(currentMino == null) return;
+
+		if(this.gameOverIndexCounter % 2 == 0) currentMino.setXY(left_x, top_y + Square.SIZE);
+		else currentMino.setXY(left_x + (WIDTH/2) + Square.SIZE, top_y + Square.SIZE);
+
+		this.gameOverIndexCounter++;	
+	}
+	
+	private Mino getGOMino(Integer index) {
+
+		Mino mino = null;
+
+		switch(index){
+			case 0: mino = new Mino_G();break;
+			case 1: mino = new Mino_A();break;
+			case 2: mino = new Mino_M();break;
+			case 3: mino = new Mino_E();break;
+			//case 4: mino = new Mino_O();break;
+			//case 5: mino = new Mino_V();break;
+			//case 6: mino = new Mino_E();break;
+			//case 6: mino = new Mino_R();break;
+		}
+
+		return mino;
 	}
 }

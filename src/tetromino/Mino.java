@@ -22,6 +22,7 @@ public class Mino {
 	
 	boolean hasLeftCollision, hasRightCollision, hasBottomCollision;
 	public boolean isMinoActive = true;
+	public int gameOverIndex;
 	
 	public void create(Color color) {
 		for(int i = 0; i < 4; i++) {
@@ -115,6 +116,26 @@ public class Mino {
 		}
 	}
 	
+	private void checkGOStaticCollision() {
+		
+		for(int i = 0; i < PlayManager.goStaticSquares.size(); i++) {
+			int targetX = PlayManager.goStaticSquares.get(i).x;
+			int targetY = PlayManager.goStaticSquares.get(i).y;
+
+			for(int j = 0; j < squaresGO.length; j++) {
+				if(squaresGO[j].y + Square.SIZE == targetY && squaresGO[j].x == targetX) hasBottomCollision = true;
+			}
+			
+			for(int j = 0; j < squaresGO.length; j++) {
+				if(squaresGO[j].x - Square.SIZE == targetX && squaresGO[j].y == targetY) hasLeftCollision = true;
+			}
+			
+			for(int j = 0; j < squaresGO.length; j++) {
+				if(squaresGO[j].x + Square.SIZE == targetX && squaresGO[j].y == targetY) hasRightCollision = true;
+			}
+		}
+	}
+	
 	public void update() {
 
 		if(isDeactivating) deactivateMino();
@@ -151,7 +172,7 @@ public class Mino {
 		
 		hasBottomCollision = false;
 		
-		//checkStaticCollision();
+		checkGOStaticCollision();
 		
 		for(int i = 0; i < squaresGO.length; i++) {
 			if(squaresGO[i].y + Square.SIZE == PlayManager.bottom_y) hasBottomCollision = true;
@@ -191,6 +212,7 @@ public class Mino {
 	}
 	
 	public void drawForGO(Graphics2D graphics2D) {
+		if(squaresGO[0] == null) return;
 		graphics2D.setColor(squaresGO[0].color);
 
 		int margin = 2;
