@@ -2,9 +2,9 @@ package tetromino;
 
 import java.awt.Color;
 
-public class Mino_E extends Mino {
+public class MinoGO_E extends Mino {
 	
-	public Mino_E() {
+	public MinoGO_E() {
 		createGameOver(Color.WHITE);
 		this.gameOverIndex = 0;
 	}

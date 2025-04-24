@@ -9,13 +9,16 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import tetromino.Mino;
-import tetromino.Mino_A;
-import tetromino.Mino_E;
-import tetromino.Mino_G;
+import tetromino.MinoGO_A;
+import tetromino.MinoGO_E;
+import tetromino.MinoGO_G;
+import tetromino.MinoGO_M;
+import tetromino.MinoGO_O;
+import tetromino.MinoGO_R;
+import tetromino.MinoGO_V;
 import tetromino.Mino_I;
 import tetromino.Mino_J;
 import tetromino.Mino_L;
-import tetromino.Mino_M;
 import tetromino.Mino_O;
 import tetromino.Mino_S;
 import tetromino.Mino_T;
@@ -456,8 +459,8 @@ public class PlayManager {
 		
 		if(currentMino == null) return;
 
-		if(this.gameOverIndexCounter % 2 == 0) currentMino.setXY(left_x, top_y + Square.SIZE);
-		else currentMino.setXY(left_x + (WIDTH/2) + Square.SIZE, top_y + Square.SIZE);
+		if(this.gameOverIndexCounter % 2 == 0) currentMino.setXY(left_x, top_y - Square.SIZE );
+		else currentMino.setXY(left_x + (WIDTH/2) + Square.SIZE, top_y - Square.SIZE );
 
 		this.gameOverIndexCounter++;	
 	}
@@ -467,14 +470,14 @@ public class PlayManager {
 		Mino mino = null;
 
 		switch(index){
-			case 0: mino = new Mino_G();break;
-			case 1: mino = new Mino_A();break;
-			case 2: mino = new Mino_M();break;
-			case 3: mino = new Mino_E();break;
-			//case 4: mino = new Mino_O();break;
-			//case 5: mino = new Mino_V();break;
-			//case 6: mino = new Mino_E();break;
-			//case 6: mino = new Mino_R();break;
+			case 0: mino = new MinoGO_G();break;
+			case 1: mino = new MinoGO_A();break;
+			case 2: mino = new MinoGO_M();break;
+			case 3: mino = new MinoGO_E();break;
+			case 4: mino = new MinoGO_O();break;
+			case 5: mino = new MinoGO_V();break;
+			case 6: mino = new MinoGO_E();break;
+			case 7: mino = new MinoGO_R();break;
 		}
 
 		return mino;

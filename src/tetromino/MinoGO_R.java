@@ -2,10 +2,10 @@ package tetromino;
 
 import java.awt.Color;
 
-public class Mino_A extends Mino{
+public class MinoGO_R extends Mino{
 
-	public Mino_A() {
-		createGameOver(Color.PINK);
+	public MinoGO_R() {
+		createGameOver(Color.WHITE);
 		this.gameOverIndex = 0;
 	}
 
@@ -13,7 +13,7 @@ public class Mino_A extends Mino{
 		// 0 o o o 4
 		// 5       6
 		// 7 o o o 11
-		// o       o
+		// o     o
 		// o       o
 		squaresGO[0].x = x;
 		squaresGO[0].y = y;
@@ -44,11 +44,13 @@ public class Mino_A extends Mino{
 
 		squaresGO[12].x = squaresGO[0].x;
 		squaresGO[12].y = squaresGO[0].y + Square.SIZE * 3;
-		squaresGO[13].x = squaresGO[0].x + Square.SIZE * 4;
+
+		squaresGO[13].x = squaresGO[0].x + Square.SIZE * 3;
 		squaresGO[13].y = squaresGO[0].y + Square.SIZE * 3;
 
 		squaresGO[14].x = squaresGO[0].x;
 		squaresGO[14].y = squaresGO[0].y + Square.SIZE * 4;
+
 		squaresGO[15].x = squaresGO[0].x + Square.SIZE * 4;
 		squaresGO[15].y = squaresGO[0].y + Square.SIZE * 4;
 	}
